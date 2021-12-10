@@ -9,15 +9,19 @@
     <thead>
     <tr>
         <th>#</th>
-        <th>UserName</th>
+        <th>Name</th>
+        <th>Text</th>
+        <th>Address</th>
     </tr>
     </thead>
     <tbody>
 
-    <c:forEach items="${users}" var="user">
+    <c:forEach items="${accidents}" var="accident">
         <tr>
             <th scope="row"></th>
-            <td>${user}</td>
+            <td>${accident.name}</td>
+            <td>${accident.text}</td>
+            <td>${accident.address}</td>
         </tr>
     </c:forEach>
     </tbody>
