@@ -5,18 +5,7 @@
     <title>Girls</title>
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script>
-    function editAccident(accident) {
-        try {
-            var x = new XMLHttpRequest();
-            x.open("GET", "/edit", false);
-            x.send();
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
-</script>
 <body>
 <a href="<c:url value='/create'/>">Добавить инцидент</a>
 <table class="table table-striped">
