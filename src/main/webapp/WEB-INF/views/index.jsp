@@ -15,6 +15,7 @@
         <th>Name</th>
         <th>Text</th>
         <th>Address</th>
+        <th>Type</th>
     </tr>
     </thead>
     <tbody>
@@ -25,6 +26,8 @@
             <td>${accident.name}</td>
             <td>${accident.text}</td>
             <td>${accident.address}</td>
+            <td>${accident.type.name}</td>
+
             <td>
                 <a href="<c:url value='/edit?id=${accident.id}'/>">Изменить</a>
             </td>

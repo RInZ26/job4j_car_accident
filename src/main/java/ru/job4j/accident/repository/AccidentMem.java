@@ -16,19 +16,15 @@ public class AccidentMem {
      */
     private final AtomicInteger identityCounter = new AtomicInteger(0);
 
-    private final Map<Integer, Accident> accidents = new HashMap<>(
-            Map.of(identityCounter.addAndGet(1),
-                    new Accident(identityCounter.get(), "Beautiful", "alina is an " + "accident",
-                            "UnicornLand"), identityCounter.addAndGet(1),
-                    new Accident(identityCounter.get(), "Awful", "ksusha", "sadLand")));
+    private final Map<Integer, Accident> accidents = new HashMap<>();
 
-    public void addAccident(Accident accident) {
+    public void save(Accident accident) {
         int key = identityCounter.addAndGet(1);
         accident.setId(key);
-        changeAccident(key, accident);
+        change(key, accident);
     }
 
-    public void changeAccident(Integer id, Accident accident) {
+    public void change(Integer id, Accident accident) {
         accidents.put(id, accident);
     }
 
@@ -36,7 +32,7 @@ public class AccidentMem {
         return accidents.get(id);
     }
 
-    public List<Accident> getAllAccidents() {
+    public List<Accident> findAll() {
         return new ArrayList<>(accidents.values());
     }
 }

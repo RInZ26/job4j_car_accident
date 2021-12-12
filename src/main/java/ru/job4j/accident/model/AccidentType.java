@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.Objects;
 
 @NoArgsConstructor
-public class Accident {
+public class AccidentType {
     @Getter
     @Setter
     private int id;
@@ -16,25 +16,11 @@ public class Accident {
     @Setter
     private String name;
 
-    @Getter
-    @Setter
-
-    private String text;
-
-    @Getter
-    @Setter
-    private String address;
-
-    @Getter
-    @Setter
-    private AccidentType type;
-
-    public Accident(int id, String name, String text, String address, AccidentType type) {
-        this.id = id;
-        this.name = name;
-        this.text = text;
-        this.address = address;
-        this.type = type;
+    public static AccidentType of(int id, String name) {
+        AccidentType type = new AccidentType();
+        type.id = id;
+        type.name = name;
+        return type;
     }
 
     @Override
@@ -45,8 +31,8 @@ public class Accident {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Accident accident = (Accident) o;
-        return id == accident.id;
+        AccidentType that = (AccidentType) o;
+        return id == that.id;
     }
 
     @Override

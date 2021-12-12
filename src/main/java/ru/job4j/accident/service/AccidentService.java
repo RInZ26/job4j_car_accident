@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class AccidentService {
 
-    private AccidentMem accidentMem;
+    private final AccidentMem accidentMem;
 
     @Autowired
     public AccidentService(AccidentMem accidentMem) {
@@ -18,12 +18,12 @@ public class AccidentService {
     }
 
     public List<Accident> findAll() {
-        return accidentMem.getAllAccidents();
+        return accidentMem.findAll();
     }
 
     public void save(Accident accident) {
         if (0 == accident.getId()) {
-            accidentMem.addAccident(accident);
+            accidentMem.save(accident);
         } else {
             changeAccident(accident.getId(), accident);
         }
@@ -34,6 +34,6 @@ public class AccidentService {
     }
 
     private void changeAccident(int id, Accident accident) {
-        accidentMem.changeAccident(id, accident);
+        accidentMem.change(id, accident);
     }
 }
