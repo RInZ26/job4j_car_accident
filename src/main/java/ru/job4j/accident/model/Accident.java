@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 public class Accident {
@@ -29,12 +31,19 @@ public class Accident {
     @Setter
     private AccidentType type;
 
+    @Getter
+    private Set<Rule> rules = new HashSet<>();
+
     public Accident(int id, String name, String text, String address, AccidentType type) {
         this.id = id;
         this.name = name;
         this.text = text;
         this.address = address;
         this.type = type;
+    }
+
+    public void addRule(Rule rule) {
+        rules.add(rule);
     }
 
     @Override

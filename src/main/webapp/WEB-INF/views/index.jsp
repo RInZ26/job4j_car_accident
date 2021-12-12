@@ -16,6 +16,8 @@
         <th>Text</th>
         <th>Address</th>
         <th>Type</th>
+        <th>Rules</th>
+
     </tr>
     </thead>
     <tbody>
@@ -27,6 +29,13 @@
             <td>${accident.text}</td>
             <td>${accident.address}</td>
             <td>${accident.type.name}</td>
+
+            <c:if test="${accident.rules.size() == 0}">
+                <td>Статьи отсутствуют</td>>
+            </c:if>>
+            <c:forEach var="rule" items="${accident.rules}">
+                <td>${rule.name}</td>
+            </c:forEach>
 
             <td>
                 <a href="<c:url value='/edit?id=${accident.id}'/>">Изменить</a>
