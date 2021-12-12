@@ -29,7 +29,7 @@ public class AccidentService {
         }
     }
 
-    public void changeAccident(Integer id, Accident accident) {
+    private void changeAccident(Integer id, Accident accident) {
         accidentMem.changeAccident(id, accident);
     }
 }

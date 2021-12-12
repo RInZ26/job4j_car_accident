@@ -14,25 +14,25 @@ public class AccidentMem {
     /**
      * Делаем вид, что у нас нет ORM и id мы проставляем сами
      */
-    private static final AtomicInteger IDENTITY_COUNTER = new AtomicInteger(0);
+    private final AtomicInteger identityCounter = new AtomicInteger(0);
 
-    private static final Map<Integer, Accident> ACCIDENTS =
-            new HashMap<>(Map.of(IDENTITY_COUNTER.addAndGet(1), new Accident(IDENTITY_COUNTER.get(),
-                            "Beautiful", "alina is an " + "accident", "UnicornLand"),
-                    IDENTITY_COUNTER.addAndGet(1), new Accident(IDENTITY_COUNTER.get(), "Awful",
-                            "ksusha", "sadLand")));
+    private final Map<Integer, Accident> accidents = new HashMap<>(
+            Map.of(identityCounter.addAndGet(1),
+                    new Accident(identityCounter.get(), "Beautiful", "alina is an " + "accident",
+                            "UnicornLand"), identityCounter.addAndGet(1),
+                    new Accident(identityCounter.get(), "Awful", "ksusha", "sadLand")));
 
     public void addAccident(Accident accident) {
-        int key = IDENTITY_COUNTER.addAndGet(1);
+        int key = identityCounter.addAndGet(1);
         accident.setId(key);
         changeAccident(key, accident);
     }
 
     public void changeAccident(Integer id, Accident accident) {
-        ACCIDENTS.put(id, accident);
+        accidents.put(id, accident);
     }
 
     public List<Accident> getAllAccidents() {
-        return new ArrayList<>(ACCIDENTS.values());
+        return new ArrayList<>(accidents.values());
     }
 }
