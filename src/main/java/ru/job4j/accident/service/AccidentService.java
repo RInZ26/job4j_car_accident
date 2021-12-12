@@ -17,11 +17,11 @@ public class AccidentService {
         this.accidentMem = accidentMem;
     }
 
-    public List<Accident> getAllAccidents() {
+    public List<Accident> findAll() {
         return accidentMem.getAllAccidents();
     }
 
-    public void saveAccident(Accident accident) {
+    public void save(Accident accident) {
         if (0 == accident.getId()) {
             accidentMem.addAccident(accident);
         } else {
@@ -29,7 +29,11 @@ public class AccidentService {
         }
     }
 
-    private void changeAccident(Integer id, Accident accident) {
+    public Accident findById(int id) {
+        return accidentMem.findById(id);
+    }
+
+    private void changeAccident(int id, Accident accident) {
         accidentMem.changeAccident(id, accident);
     }
 }

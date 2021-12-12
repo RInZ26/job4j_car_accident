@@ -26,11 +26,7 @@
             <td>${accident.text}</td>
             <td>${accident.address}</td>
             <td>
-                <form action="<c:url value="/edit?id=${accident.id}&name=${accident.name}&text=${accident.text}&address=${accident.address}"/>"
-                      method="post"
-                      enctype="multipart/form-data">
-                    <button type="submit" class="btn btn-primary">Изменить</button>
-                </form>
+                <a href="<c:url value='/edit?id=${accident.id}'/>">Изменить</a>
             </td>
         </tr>
     </c:forEach>
