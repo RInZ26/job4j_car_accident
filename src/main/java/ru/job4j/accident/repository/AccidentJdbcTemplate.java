@@ -5,7 +5,9 @@ import ru.job4j.accident.model.Accident;
 
 import java.util.List;
 
-//@Repository
+/***
+ * Когда-то был гордым @Repository
+ */
 public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
 
