@@ -12,7 +12,7 @@ public class DtoParser {
     public Accident parseAccident(AccidentDto accidentDto) {
         Accident accident = Accident.of(accidentDto.getName(), accidentDto.getText(),
                 accidentDto.getAddress(), accidentDto.getType(), accidentDto.getRules());
-        accident.setId(accident.getId());
+        accident.setId(accidentDto.getId());
         return accident;
     }
 }
