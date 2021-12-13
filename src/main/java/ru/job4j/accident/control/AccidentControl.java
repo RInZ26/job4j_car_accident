@@ -11,8 +11,6 @@ import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.service.AccidentService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Optional;
 
 @Controller
 public class AccidentControl {
@@ -33,10 +31,7 @@ public class AccidentControl {
 
     @PostMapping("/save")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
-        Optional<String[]> rIds = Optional.ofNullable(req.getParameterValues("rIds"));
-
-        accidentService.saveAccident(accident,
-                Arrays.stream(rIds.orElse(new String[0])).mapToInt(Integer::parseInt).toArray());
+        accidentService.saveAccident(accident, req.getParameterValues("rIds"));
 
         return "redirect:/";
     }

@@ -9,7 +9,9 @@ import ru.job4j.accident.repository.AccidentMem;
 import ru.job4j.accident.repository.AccidentTypeMem;
 import ru.job4j.accident.repository.RuleMem;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccidentService {
@@ -30,16 +32,17 @@ public class AccidentService {
         accidentMem.change(id, accident);
     }
 
-    public void saveAccident(Accident accident, int[] ruleIds) {
+    public void saveAccident(Accident accident, String[] rIds) {
         AccidentType type = accident.getType();
         if (null != type) {
             accident.setType(findTypeById(type.getId()));
         }
 
-        if (null != ruleIds) {
-            for (int ruleId : ruleIds) {
-                accident.addRule(findRuleById(ruleId));
-            }
+        int[] parsedRIds = Arrays.stream(Optional.ofNullable(rIds).orElse(new String[0]))
+                                 .mapToInt(Integer::parseInt).toArray();
+
+        for (int ruleId : parsedRIds) {
+            accident.addRule(findRuleById(ruleId));
         }
 
         int accidentId = accident.getId();

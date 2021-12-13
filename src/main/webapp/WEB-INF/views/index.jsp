@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Girls</title>
+    <title>Accidents</title>
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
