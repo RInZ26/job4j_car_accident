@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.AccidentMem;
+import ru.job4j.accident.repository.AccidentJdbcTemplate;
 import ru.job4j.accident.repository.AccidentTypeMem;
 import ru.job4j.accident.repository.RuleMem;
 
@@ -16,20 +16,16 @@ import java.util.Optional;
 @Service
 public class AccidentService {
 
-    private final AccidentMem accidentMem;
+    private final AccidentJdbcTemplate accidentStore;
     private final AccidentTypeMem accidentTypesMem;
     private final RuleMem ruleMem;
 
     @Autowired
-    public AccidentService(AccidentMem accidentMem, AccidentTypeMem accidentTypesMem,
+    public AccidentService(AccidentJdbcTemplate accidentStore, AccidentTypeMem accidentTypesMem,
                            RuleMem ruleMem) {
-        this.accidentMem = accidentMem;
+        this.accidentStore = accidentStore;
         this.accidentTypesMem = accidentTypesMem;
         this.ruleMem = ruleMem;
-    }
-
-    private void changeAccident(int id, Accident accident) {
-        accidentMem.change(id, accident);
     }
 
     public void saveAccident(Accident accident, String[] rIds) {
@@ -47,18 +43,18 @@ public class AccidentService {
 
         int accidentId = accident.getId();
         if (0 == accidentId) {
-            accidentMem.save(accident);
+            accidentStore.save(accident);
         } else {
-            changeAccident(accidentId, accident);
+            accidentStore.update(accident, accidentId);
         }
     }
 
     public List<Accident> findAllAccidents() {
-        return accidentMem.findAll();
+        return accidentStore.findAll();
     }
 
     public Accident findAccidentById(int id) {
-        return accidentMem.findById(id);
+        return accidentStore.findById(id);
     }
 
     public void updateAccidentByTypeId(int typeId, Accident accident) {
