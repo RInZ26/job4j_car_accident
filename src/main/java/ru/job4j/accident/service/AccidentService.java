@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.AccidentJdbcTemplate;
-import ru.job4j.accident.repository.AccidentTypeMem;
-import ru.job4j.accident.repository.RuleMem;
+import ru.job4j.accident.model.dto.AccidentDto;
+import ru.job4j.accident.repository.AccidentHibernate;
+import ru.job4j.accident.repository.AccidentTypeHibernate;
+import ru.job4j.accident.repository.RuleHibernate;
+import ru.job4j.accident.tools.DtoParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,19 +18,21 @@ import java.util.Optional;
 @Service
 public class AccidentService {
 
-    private final AccidentJdbcTemplate accidentStore;
-    private final AccidentTypeMem accidentTypesMem;
-    private final RuleMem ruleMem;
+    private final AccidentHibernate accidentStore;
+    private final AccidentTypeHibernate accidentTypeStore;
+    private final RuleHibernate ruleStore;
+    private final DtoParser dtoParser;
 
     @Autowired
-    public AccidentService(AccidentJdbcTemplate accidentStore, AccidentTypeMem accidentTypesMem,
-                           RuleMem ruleMem) {
+    public AccidentService(AccidentHibernate accidentStore, AccidentTypeHibernate accidentTypesMem,
+                           RuleHibernate ruleHibernate, DtoParser dtoParser) {
         this.accidentStore = accidentStore;
-        this.accidentTypesMem = accidentTypesMem;
-        this.ruleMem = ruleMem;
+        this.accidentTypeStore = accidentTypesMem;
+        this.ruleStore = ruleHibernate;
+        this.dtoParser = dtoParser;
     }
 
-    public void saveAccident(Accident accident, String[] rIds) {
+    private void persistHelper(Accident accident, String[] rIds) {
         AccidentType type = accident.getType();
         if (null != type) {
             accident.setType(findTypeById(type.getId()));
@@ -40,13 +44,18 @@ public class AccidentService {
         for (int ruleId : parsedRIds) {
             accident.addRule(findRuleById(ruleId));
         }
+    }
 
-        int accidentId = accident.getId();
-        if (0 == accidentId) {
-            accidentStore.save(accident);
-        } else {
-            accidentStore.update(accident, accidentId);
-        }
+    public void saveAccident(AccidentDto accidentDto, String[] rIds) {
+        Accident accident = dtoParser.parseAccident(accidentDto);
+        persistHelper(accident, rIds);
+        accidentStore.save(accident);
+    }
+
+    public void updateAccident(AccidentDto accidentDto, String[] rIds) {
+        Accident accident = dtoParser.parseAccident(accidentDto);
+        persistHelper(accident, rIds);
+        accidentStore.update(accident);
     }
 
     public List<Accident> findAllAccidents() {
@@ -57,23 +66,19 @@ public class AccidentService {
         return accidentStore.findById(id);
     }
 
-    public void updateAccidentByTypeId(int typeId, Accident accident) {
-        accident.setType(findTypeById(typeId));
-    }
-
     public List<AccidentType> findAllTypes() {
-        return accidentTypesMem.findAll();
+        return accidentTypeStore.findAll();
     }
 
     public AccidentType findTypeById(int id) {
-        return accidentTypesMem.findById(id);
+        return accidentTypeStore.findById(id);
     }
 
     public List<Rule> findAllRules() {
-        return ruleMem.findAll();
+        return ruleStore.findAll();
     }
 
     public Rule findRuleById(int id) {
-        return ruleMem.findById(id);
+        return ruleStore.findById(id);
     }
 }
