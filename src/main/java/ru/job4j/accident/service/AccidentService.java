@@ -5,11 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.model.dto.AccidentDto;
-import ru.job4j.accident.repository.AccidentHibernate;
-import ru.job4j.accident.repository.AccidentTypeHibernate;
-import ru.job4j.accident.repository.RuleHibernate;
-import ru.job4j.accident.tools.DtoParser;
+import ru.job4j.accident.repository.orm.AccidentHibernate;
+import ru.job4j.accident.repository.orm.AccidentTypeHibernate;
+import ru.job4j.accident.repository.orm.RuleHibernate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,15 +19,13 @@ public class AccidentService {
     private final AccidentHibernate accidentStore;
     private final AccidentTypeHibernate accidentTypeStore;
     private final RuleHibernate ruleStore;
-    private final DtoParser dtoParser;
 
     @Autowired
-    public AccidentService(AccidentHibernate accidentStore, AccidentTypeHibernate accidentTypesMem,
-                           RuleHibernate ruleHibernate, DtoParser dtoParser) {
+    public AccidentService(AccidentHibernate accidentStore, AccidentTypeHibernate accidentTypeStore,
+                           RuleHibernate ruleStore) {
         this.accidentStore = accidentStore;
-        this.accidentTypeStore = accidentTypesMem;
-        this.ruleStore = ruleHibernate;
-        this.dtoParser = dtoParser;
+        this.accidentTypeStore = accidentTypeStore;
+        this.ruleStore = ruleStore;
     }
 
     private void persistHelper(Accident accident, String[] rIds) {
@@ -46,14 +42,12 @@ public class AccidentService {
         }
     }
 
-    public void saveAccident(AccidentDto accidentDto, String[] rIds) {
-        Accident accident = dtoParser.parseAccident(accidentDto);
+    public void saveAccident(Accident accident, String[] rIds) {
         persistHelper(accident, rIds);
         accidentStore.save(accident);
     }
 
-    public void updateAccident(AccidentDto accidentDto, String[] rIds) {
-        Accident accident = dtoParser.parseAccident(accidentDto);
+    public void updateAccident(Accident accident, String[] rIds) {
         persistHelper(accident, rIds);
         accidentStore.update(accident);
     }

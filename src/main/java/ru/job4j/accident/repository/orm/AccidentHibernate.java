@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository;
+package ru.job4j.accident.repository.orm;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -45,7 +45,7 @@ public class AccidentHibernate {
     public List<Accident> findAll() {
         return performTx(s -> s.createQuery(
                 "select distinct a from Accident a left join fetch a.type left join fetch"
-                        + " a.rules").list());
+                        + " a.rules order by a.id").list());
     }
 
     public Accident findById(int id) {
