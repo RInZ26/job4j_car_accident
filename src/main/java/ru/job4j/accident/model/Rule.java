@@ -15,9 +15,14 @@ public class Rule {
     @Setter
     private String name;
 
-    public static Rule of(int id, String name) {
+    public static Rule of(int id) {
         Rule rule = new Rule();
         rule.id = id;
+        return rule;
+    }
+
+    public static Rule of(int id, String name) {
+        Rule rule = Rule.of(id);
         rule.name = name;
         return rule;
     }

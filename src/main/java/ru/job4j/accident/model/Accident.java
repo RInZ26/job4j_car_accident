@@ -32,14 +32,17 @@ public class Accident {
     private AccidentType type;
 
     @Getter
+    @Setter
     private Set<Rule> rules = new HashSet<>();
 
-    public Accident(int id, String name, String text, String address, AccidentType type) {
-        this.id = id;
-        this.name = name;
-        this.text = text;
-        this.address = address;
-        this.type = type;
+    public static Accident of(int id, String name, String text, String address, AccidentType type) {
+        Accident accident = new Accident();
+        accident.id = id;
+        accident.name = name;
+        accident.text = text;
+        accident.address = address;
+        accident.type = type;
+        return accident;
     }
 
     public void addRule(Rule rule) {

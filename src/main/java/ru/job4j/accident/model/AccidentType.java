@@ -16,9 +16,14 @@ public class AccidentType {
     @Setter
     private String name;
 
-    public static AccidentType of(int id, String name) {
+    public static AccidentType of(int id) {
         AccidentType type = new AccidentType();
         type.id = id;
+        return type;
+    }
+
+    public static AccidentType of(int id, String name) {
+        AccidentType type = of(id);
         type.name = name;
         return type;
     }

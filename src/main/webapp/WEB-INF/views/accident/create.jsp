@@ -15,7 +15,7 @@
         <tr>
             <td>Тип:</td>
             <td>
-                <select name="type.id">
+                <select required name="type.id">
                     <c:forEach var="type" items="${types}">
                         <option value="${type.id}">${type.name}</option>
                     </c:forEach>
@@ -25,7 +25,7 @@
         <tr>
             <td>Статьи:</td>
             <td>
-                <select name="rIds" multiple>
+                <select required name="rIds" multiple>
                     <c:forEach var="rule" items="${rules}">
                         <option value="${rule.id}">${rule.name}</option>
                     </c:forEach>
