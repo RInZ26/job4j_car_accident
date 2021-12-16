@@ -7,6 +7,9 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <body>
+<div>
+    Login as : ${user.username}
+</div>
 <a href="<c:url value='/create'/>">Добавить инцидент</a>
 <table class="table table-striped">
     <thead>
@@ -31,7 +34,8 @@
             <td>${accident.type.name}</td>
 
             <c:if test="${accident.rules.size() == 0}">
-                <td>Статьи отсутствуют</td>>
+                <td>Статьи отсутствуют</td>
+                >
             </c:if>>
             <c:forEach var="rule" items="${accident.rules}">
                 <td>${rule.name}</td>
