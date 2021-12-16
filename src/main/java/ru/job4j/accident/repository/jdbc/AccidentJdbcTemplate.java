@@ -120,13 +120,11 @@ public class AccidentJdbcTemplate {
         }
     }
 
-    @Transactional(readOnly = true)
     public Accident findById(int id) {
         List<Accident> listAccidents = jdbc.query(selectByIdQuery, accidentExtractor, id);
         return null == listAccidents || listAccidents.isEmpty() ? null : listAccidents.get(0);
     }
 
-    @Transactional(readOnly = true)
     public List<Accident> findAll() {
         return jdbc.query(selectAllQuery, accidentExtractor);
     }
