@@ -1,6 +1,7 @@
 package ru.job4j.accident.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
@@ -34,7 +35,7 @@ public class AccidentService {
     }
 
     public List<Accident> findAll() {
-        return accidentRepository.findAll();
+        return accidentRepository.findAll(Sort.by("id"));
     }
 
     private void persistHelper(Accident accident, String[] rIds) {
@@ -58,7 +59,7 @@ public class AccidentService {
     }
 
     public Accident findAccidentById(int id) {
-        return accidentRepository.findById(id).orElse(null);
+        return accidentRepository.findById(id);
     }
 
     public List<AccidentType> findAllTypes() {
