@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository.jdbc.mapper;
+package ru.job4j.accident.repository.jdbc.dataextract.mapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;

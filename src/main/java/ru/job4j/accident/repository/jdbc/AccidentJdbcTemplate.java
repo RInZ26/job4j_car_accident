@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.jdbc.rsextractor.AccidentExtractor;
+import ru.job4j.accident.repository.jdbc.dataextract.mapper.AccidentMapper;
+import ru.job4j.accident.repository.jdbc.dataextract.rsextractor.AccidentExtractor;
 
 import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
@@ -26,6 +27,8 @@ public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
 
     private final AccidentExtractor accidentExtractor;
+
+    private final AccidentMapper accidentMapper;
 
     @Value("${query.accidentId}")
     private String accidentId;
@@ -56,9 +59,11 @@ public class AccidentJdbcTemplate {
     private String selectByIdQuery;
 
     @Autowired
-    public AccidentJdbcTemplate(JdbcTemplate jdbc, AccidentExtractor accidentExtractor) {
+    public AccidentJdbcTemplate(JdbcTemplate jdbc, AccidentExtractor accidentExtractor,
+                                AccidentMapper accidentMapper) {
         this.jdbc = jdbc;
         this.accidentExtractor = accidentExtractor;
+        this.accidentMapper = accidentMapper;
     }
 
     @PostConstruct
@@ -94,11 +99,13 @@ public class AccidentJdbcTemplate {
             ps.setString(1, accident.getName());
             ps.setString(2, accident.getAddress());
             ps.setString(3, accident.getText());
-            ps.setInt(4, accident.getType().getId());
+            ps.setInt(4, accident.getType()
+                                 .getId());
             return ps;
         }, keyHolder);
 
-        Set<Rule> ruleSet = Optional.of(accident.getRules()).orElse(Collections.emptySet());
+        Set<Rule> ruleSet = Optional.of(accident.getRules())
+                                    .orElse(Collections.emptySet());
 
         for (Rule rule : ruleSet) {
             jdbc.update("INSERT INTO accident_rule (accident_id, rules_id) VALUES (?,?)",
@@ -109,11 +116,13 @@ public class AccidentJdbcTemplate {
     @Transactional
     public void update(Accident accident, int id) {
         jdbc.update("UPDATE accident SET name = ?, address = ?, text = ?, type_id = ? WHERE id = ?",
-                accident.getName(), accident.getAddress(), accident.getText(),
-                accident.getType().getId(), id);
+                accident.getName(), accident.getAddress(), accident.getText(), accident.getType()
+                                                                                       .getId(),
+                id);
 
         jdbc.update("DELETE FROM accident_rule AS ar WHERE ar.accident_id = ?", id);
-        Set<Rule> ruleSet = Optional.of(accident.getRules()).orElse(Collections.emptySet());
+        Set<Rule> ruleSet = Optional.of(accident.getRules())
+                                    .orElse(Collections.emptySet());
         for (Rule rule : ruleSet) {
             jdbc.update("INSERT INTO accident_rule (accident_id, rules_id) VALUES (?,?)", id,
                     rule.getId());
@@ -121,8 +130,7 @@ public class AccidentJdbcTemplate {
     }
 
     public Accident findById(int id) {
-        List<Accident> listAccidents = jdbc.query(selectByIdQuery, accidentExtractor, id);
-        return null == listAccidents || listAccidents.isEmpty() ? null : listAccidents.get(0);
+        return jdbc.queryForObject(selectByIdQuery, accidentMapper, id);
     }
 
     public List<Accident> findAll() {

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.AccidentType;
-import ru.job4j.accident.repository.jdbc.mapper.AccidentTypeMapper;
+import ru.job4j.accident.repository.jdbc.dataextract.mapper.AccidentTypeMapper;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
