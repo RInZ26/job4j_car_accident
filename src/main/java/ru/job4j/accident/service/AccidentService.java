@@ -5,44 +5,51 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.jdbc.AccidentJdbcTemplate;
-import ru.job4j.accident.repository.jdbc.AccidentTypeJdbcTemplate;
-import ru.job4j.accident.repository.jdbc.RuleJdbcTemplate;
+import ru.job4j.accident.repository.orm.AccidentHibernate;
+import ru.job4j.accident.repository.orm.AccidentTypeHibernate;
+import ru.job4j.accident.repository.orm.RuleHibernate;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AccidentService {
 
-    private final AccidentJdbcTemplate accidentStore;
-    private final AccidentTypeJdbcTemplate accidentTypesStore;
-    private final RuleJdbcTemplate ruleStore;
+    private final AccidentHibernate accidentStore;
+    private final AccidentTypeHibernate accidentTypeStore;
+    private final RuleHibernate ruleStore;
 
     @Autowired
-    public AccidentService(AccidentJdbcTemplate accidentStore,
-                           AccidentTypeJdbcTemplate accidentTypesStore,
-                           RuleJdbcTemplate ruleStore) {
+    public AccidentService(AccidentHibernate accidentStore, AccidentTypeHibernate accidentTypeStore,
+                           RuleHibernate ruleStore) {
         this.accidentStore = accidentStore;
-        this.accidentTypesStore = accidentTypesStore;
+        this.accidentTypeStore = accidentTypeStore;
         this.ruleStore = ruleStore;
     }
 
-    public void saveAccident(Accident accident, String[] rIds) {
+    private void persistHelper(Accident accident, String[] rIds) {
+        AccidentType type = accident.getType();
+        if (null != type) {
+            accident.setType(findTypeById(type.getId()));
+        }
 
         int[] parsedRIds = Arrays.stream(Optional.ofNullable(rIds).orElse(new String[0]))
                                  .mapToInt(Integer::parseInt).toArray();
 
-        accident.setRules(Arrays.stream(parsedRIds).mapToObj(Rule::of).collect(Collectors.toSet()));
-
-        int accidentId = accident.getId();
-        if (0 == accidentId) {
-            accidentStore.save(accident);
-        } else {
-            accidentStore.update(accident, accidentId);
+        for (int ruleId : parsedRIds) {
+            accident.addRule(findRuleById(ruleId));
         }
+    }
+
+    public void saveAccident(Accident accident, String[] rIds) {
+        persistHelper(accident, rIds);
+        accidentStore.save(accident);
+    }
+
+    public void updateAccident(Accident accident, String[] rIds) {
+        persistHelper(accident, rIds);
+        accidentStore.update(accident);
     }
 
     public List<Accident> findAllAccidents() {
@@ -54,10 +61,18 @@ public class AccidentService {
     }
 
     public List<AccidentType> findAllTypes() {
-        return accidentTypesStore.findAll();
+        return accidentTypeStore.findAll();
+    }
+
+    public AccidentType findTypeById(int id) {
+        return accidentTypeStore.findById(id);
     }
 
     public List<Rule> findAllRules() {
         return ruleStore.findAll();
+    }
+
+    public Rule findRuleById(int id) {
+        return ruleStore.findById(id);
     }
 }

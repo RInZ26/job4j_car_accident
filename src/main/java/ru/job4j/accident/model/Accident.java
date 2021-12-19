@@ -4,12 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "accident")
 @NoArgsConstructor
 public class Accident {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private int id;
@@ -27,21 +33,31 @@ public class Accident {
     @Setter
     private String address;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     private AccidentType type;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id")
     @Getter
     @Setter
     private Set<Rule> rules = new HashSet<>();
 
-    public static Accident of(int id, String name, String text, String address, AccidentType type) {
+    public static Accident of(String name, String text, String address, AccidentType type) {
         Accident accident = new Accident();
-        accident.id = id;
         accident.name = name;
         accident.text = text;
         accident.address = address;
         accident.type = type;
+        return accident;
+    }
+
+    public static Accident of(String name, String text, String address, AccidentType type,
+                              Set<Rule> rules) {
+        Accident accident = of(name, text, address, type);
+        accident.setRules(rules);
+        accident.rules = rules;
         return accident;
     }
 

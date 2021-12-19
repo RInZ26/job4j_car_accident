@@ -32,7 +32,6 @@ public class AccidentControl {
     @PostMapping("/save")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
         accidentService.saveAccident(accident, req.getParameterValues("rIds"));
-
         return "redirect:/";
     }
 
@@ -43,6 +42,12 @@ public class AccidentControl {
         model.addAttribute("rules", accidentService.findAllRules());
 
         return "accident/edit";
+    }
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute Accident accident, HttpServletRequest req) {
+        accidentService.updateAccident(accident, req.getParameterValues("rIds"));
+        return "redirect:/";
     }
 }
 

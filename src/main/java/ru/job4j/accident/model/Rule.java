@@ -3,10 +3,15 @@ package ru.job4j.accident.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "rule")
 public class Rule {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private int id;
@@ -15,14 +20,8 @@ public class Rule {
     @Setter
     private String name;
 
-    public static Rule of(int id) {
+    public static Rule of(String name) {
         Rule rule = new Rule();
-        rule.id = id;
-        return rule;
-    }
-
-    public static Rule of(int id, String name) {
-        Rule rule = Rule.of(id);
         rule.name = name;
         return rule;
     }

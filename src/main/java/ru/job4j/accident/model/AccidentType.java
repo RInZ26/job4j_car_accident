@@ -4,10 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "accidentType")
 @NoArgsConstructor
 public class AccidentType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private int id;
@@ -16,14 +22,8 @@ public class AccidentType {
     @Setter
     private String name;
 
-    public static AccidentType of(int id) {
+    public static AccidentType of(String name) {
         AccidentType type = new AccidentType();
-        type.id = id;
-        return type;
-    }
-
-    public static AccidentType of(int id, String name) {
-        AccidentType type = of(id);
         type.name = name;
         return type;
     }
