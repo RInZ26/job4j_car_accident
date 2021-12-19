@@ -24,15 +24,17 @@ public class UserService {
     }
 
     public boolean saveUser(User user) {
+        boolean result = false;
+
         if (isRegAllowed(user)) {
             user.setEnabled(true);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setAuthority(authorityRepository.findByAuthority("ROLE_USER"));
             userRepository.save(user);
-            return true;
-        } else {
-            return false;
+            result = true;
         }
+
+        return result;
     }
 
     public boolean isRegAllowed(User user) {
