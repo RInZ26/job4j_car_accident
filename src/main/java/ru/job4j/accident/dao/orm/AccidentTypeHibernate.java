@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository.orm;
+package ru.job4j.accident.dao.orm;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

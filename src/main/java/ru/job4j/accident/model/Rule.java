@@ -27,6 +27,12 @@ public class Rule implements Serializable {
         return rule;
     }
 
+    public static Rule of(int id, String name) {
+        Rule rule = of(name);
+        rule.id = id;
+        return rule;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

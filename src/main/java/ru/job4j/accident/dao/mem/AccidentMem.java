@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository.mem;
+package ru.job4j.accident.dao.mem;
 
 import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Accident;

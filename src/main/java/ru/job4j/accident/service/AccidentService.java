@@ -3,14 +3,12 @@ package ru.job4j.accident.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.job4j.accident.dao.repository.AccidentRepository;
+import ru.job4j.accident.dao.repository.AccidentTypeRepository;
+import ru.job4j.accident.dao.repository.RuleRepository;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.model.dto.AccidentDto;
-import ru.job4j.accident.repository.AccidentRepository;
-import ru.job4j.accident.repository.AccidentTypeHibernate;
-import ru.job4j.accident.repository.RuleHibernate;
-import ru.job4j.accident.tools.DtoParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,19 +17,15 @@ import java.util.Optional;
 @Service
 public class AccidentService {
     private final AccidentRepository accidentRepository;
-
-    private final AccidentTypeHibernate accidentTypeStore;
-    private final RuleHibernate ruleStore;
-    private final DtoParser dtoParser;
+    private final RuleRepository ruleRepository;
+    private final AccidentTypeRepository typeRepository;
 
     @Autowired
-    public AccidentService(AccidentRepository accidentRepository,
-                           AccidentTypeHibernate accidentTypeStore, RuleHibernate ruleStore,
-                           DtoParser dtoParser) {
+    public AccidentService(AccidentRepository accidentRepository, RuleRepository ruleRepository,
+                           AccidentTypeRepository typeRepository) {
         this.accidentRepository = accidentRepository;
-        this.accidentTypeStore = accidentTypeStore;
-        this.ruleStore = ruleStore;
-        this.dtoParser = dtoParser;
+        this.ruleRepository = ruleRepository;
+        this.typeRepository = typeRepository;
     }
 
     public List<Accident> findAll() {
@@ -44,16 +38,13 @@ public class AccidentService {
             accident.setType(findTypeById(type.getId()));
         }
 
-        int[] parsedRIds = Arrays.stream(Optional.ofNullable(rIds).orElse(new String[0]))
-                                 .mapToInt(Integer::parseInt).toArray();
-
-        for (int ruleId : parsedRIds) {
-            accident.addRule(findRuleById(ruleId));
-        }
+        Arrays.stream(Optional.ofNullable(rIds)
+                              .orElse(new String[0]))
+              .mapToInt(Integer::parseInt)
+              .forEach(id -> accident.addRule(Rule.of(id, null)));
     }
 
-    public void saveAccident(AccidentDto accidentDto, String[] rIds) {
-        Accident accident = dtoParser.parseAccident(accidentDto);
+    public void saveAccident(Accident accident, String[] rIds) {
         persistHelper(accident, rIds);
         accidentRepository.save(accident);
     }
@@ -63,18 +54,14 @@ public class AccidentService {
     }
 
     public List<AccidentType> findAllTypes() {
-        return accidentTypeStore.findAll();
+        return typeRepository.findAll();
     }
 
     public AccidentType findTypeById(int id) {
-        return accidentTypeStore.findById(id);
+        return typeRepository.findById(id);
     }
 
     public List<Rule> findAllRules() {
-        return ruleStore.findAll();
-    }
-
-    public Rule findRuleById(int id) {
-        return ruleStore.findById(id);
+        return ruleRepository.findAll();
     }
 }

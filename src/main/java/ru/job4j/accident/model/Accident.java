@@ -44,6 +44,12 @@ public class Accident implements Serializable {
     @Setter
     private Set<Rule> rules = new HashSet<>();
 
+    public static Accident of(int id, String name, String text, String address, AccidentType type) {
+        Accident accident = of(name, text, address, type);
+        accident.id = id;
+        return accident;
+    }
+
     public static Accident of(String name, String text, String address, AccidentType type) {
         Accident accident = new Accident();
         accident.name = name;

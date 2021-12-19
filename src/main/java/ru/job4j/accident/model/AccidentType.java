@@ -29,6 +29,12 @@ public class AccidentType implements Serializable {
         return type;
     }
 
+    public static AccidentType of(int id, String name) {
+        AccidentType type = of(name);
+        type.id = id;
+        return type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

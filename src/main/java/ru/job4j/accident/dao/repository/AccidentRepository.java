@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository;
+package ru.job4j.accident.dao.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;

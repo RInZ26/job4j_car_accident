@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository.jdbc;
+package ru.job4j.accident.dao.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,10 +8,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.job4j.accident.dao.jdbc.dataextract.mapper.AccidentMapper;
+import ru.job4j.accident.dao.jdbc.dataextract.rsextractor.AccidentExtractor;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.jdbc.dataextract.mapper.AccidentMapper;
-import ru.job4j.accident.repository.jdbc.dataextract.rsextractor.AccidentExtractor;
 
 import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;

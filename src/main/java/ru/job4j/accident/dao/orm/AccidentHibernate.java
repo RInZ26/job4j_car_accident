@@ -1,22 +1,21 @@
-package ru.job4j.accident.repository.orm;
+package ru.job4j.accident.dao.orm;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.job4j.accident.model.Rule;
+import ru.job4j.accident.model.Accident;
 
 import java.util.List;
 import java.util.function.Function;
 
 @Repository
-public class RuleHibernate {
-
+public class AccidentHibernate {
     private final SessionFactory sf;
 
     @Autowired
-    public RuleHibernate(SessionFactory sf) {
+    public AccidentHibernate(SessionFactory sf) {
         this.sf = sf;
     }
 
@@ -35,21 +34,23 @@ public class RuleHibernate {
         }
     }
 
-    public void save(Rule rule) {
-        performTx(s -> s.save(rule));
+    public void save(Accident accident) {
+        performTx(s -> s.save(accident));
     }
 
-    public void update(Rule rule) {
-        performTx(s -> s.merge(rule));
+    public void update(Accident accident) {
+        performTx(s -> s.merge(accident));
     }
 
-    public List<Rule> findAll() {
-        return performTx(s -> s.createQuery("from Rule ").list());
+    public List<Accident> findAll() {
+        return performTx(s -> s.createQuery(
+                "select distinct a from Accident a left join fetch a.type left join fetch"
+                        + " a.rules order by a.id").list());
     }
 
-    public Rule findById(int id) {
-        return (Rule) performTx(
-                s -> s.createQuery("select r from Rule r where r.id = :id ").setParameter("id", id)
-                      .getSingleResult());
+    public Accident findById(int id) {
+        return (Accident) performTx(s -> s.createQuery(
+                "select a from Accident a left join fetch a.type left join fetch"
+                        + " a.rules where a.id = :id ").setParameter("id", id).getSingleResult());
     }
 }

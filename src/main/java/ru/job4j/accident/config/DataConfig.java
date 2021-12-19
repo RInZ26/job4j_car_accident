@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("classpath:app.properties")
-@EnableJpaRepositories("ru.job4j.accident.repository")
+@EnableJpaRepositories("ru.job4j.accident.dao")
 @EnableTransactionManagement
 public class DataConfig {
 

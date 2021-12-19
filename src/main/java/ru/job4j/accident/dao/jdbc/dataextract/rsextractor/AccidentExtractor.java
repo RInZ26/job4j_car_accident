@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository.jdbc.dataextract.rsextractor;
+package ru.job4j.accident.dao.jdbc.dataextract.rsextractor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,9 +6,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+import ru.job4j.accident.dao.jdbc.dataextract.AccidentExtractHelper;
+import ru.job4j.accident.dao.jdbc.dataextract.mapper.RuleMapper;
 import ru.job4j.accident.model.Accident;
-import ru.job4j.accident.repository.jdbc.dataextract.AccidentExtractHelper;
-import ru.job4j.accident.repository.jdbc.dataextract.mapper.RuleMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

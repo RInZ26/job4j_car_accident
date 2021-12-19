@@ -1,4 +1,4 @@
-package ru.job4j.accident.repository;
+package ru.job4j.accident.dao.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import ru.job4j.accident.model.User;
