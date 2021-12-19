@@ -1,13 +1,16 @@
 package ru.job4j.accident.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.repository.orm.AccidentHibernate;
-import ru.job4j.accident.repository.orm.AccidentTypeHibernate;
-import ru.job4j.accident.repository.orm.RuleHibernate;
+import ru.job4j.accident.model.dto.AccidentDto;
+import ru.job4j.accident.repository.AccidentRepository;
+import ru.job4j.accident.repository.AccidentTypeHibernate;
+import ru.job4j.accident.repository.RuleHibernate;
+import ru.job4j.accident.tools.DtoParser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,17 +18,24 @@ import java.util.Optional;
 
 @Service
 public class AccidentService {
+    private final AccidentRepository accidentRepository;
 
-    private final AccidentHibernate accidentStore;
     private final AccidentTypeHibernate accidentTypeStore;
     private final RuleHibernate ruleStore;
+    private final DtoParser dtoParser;
 
     @Autowired
-    public AccidentService(AccidentHibernate accidentStore, AccidentTypeHibernate accidentTypeStore,
-                           RuleHibernate ruleStore) {
-        this.accidentStore = accidentStore;
+    public AccidentService(AccidentRepository accidentRepository,
+                           AccidentTypeHibernate accidentTypeStore, RuleHibernate ruleStore,
+                           DtoParser dtoParser) {
+        this.accidentRepository = accidentRepository;
         this.accidentTypeStore = accidentTypeStore;
         this.ruleStore = ruleStore;
+        this.dtoParser = dtoParser;
+    }
+
+    public List<Accident> findAll() {
+        return accidentRepository.findAll(Sort.by("id"));
     }
 
     private void persistHelper(Accident accident, String[] rIds) {
@@ -42,22 +52,14 @@ public class AccidentService {
         }
     }
 
-    public void saveAccident(Accident accident, String[] rIds) {
+    public void saveAccident(AccidentDto accidentDto, String[] rIds) {
+        Accident accident = dtoParser.parseAccident(accidentDto);
         persistHelper(accident, rIds);
-        accidentStore.save(accident);
-    }
-
-    public void updateAccident(Accident accident, String[] rIds) {
-        persistHelper(accident, rIds);
-        accidentStore.update(accident);
-    }
-
-    public List<Accident> findAllAccidents() {
-        return accidentStore.findAll();
+        accidentRepository.save(accident);
     }
 
     public Accident findAccidentById(int id) {
-        return accidentStore.findById(id);
+        return accidentRepository.findById(id);
     }
 
     public List<AccidentType> findAllTypes() {
